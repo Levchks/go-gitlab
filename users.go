@@ -127,6 +127,22 @@ func (s *UsersService) GetUser(user int, options ...OptionFunc) (*User, *Respons
 	return usr, resp, err
 }
 
+func (s *UsersService) GetUserByUsername(user string, options ...OptionFunc) (*User, *Response, error) {
+	u := fmt.Sprintf("users?username=%s", user)
+	req, err := s.client.NewRequest("GET", u, nil, options)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	usr := []User{}
+	resp, err := s.client.Do(req, &usr)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return &usr[0], resp, err
+}
+
 // CreateUserOptions represents the available CreateUser() options.
 //
 // GitLab API docs: https://docs.gitlab.com/ce/api/users.html#user-creation
